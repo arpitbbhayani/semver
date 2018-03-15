@@ -37,6 +37,21 @@ var tolerantFormatTests = []formatTest{
 	{Version{1, 0, 0, nil, nil}, "1"},
 }
 
+var nextMajorVersionTests = []compareTest{
+	{Version{1, 2, 3, nil, nil}, Version{2, 0, 0, nil, nil}, 0},
+	{Version{0, 0, 0, nil, nil}, Version{1, 0, 0, nil, nil}, 0},
+}
+
+var nextMinorVersionTests = []compareTest{
+	{Version{1, 2, 3, nil, nil}, Version{1, 3, 0, nil, nil}, 0},
+	{Version{0, 0, 0, nil, nil}, Version{0, 1, 0, nil, nil}, 0},
+}
+
+var nextPatchVersionTests = []compareTest{
+	{Version{1, 2, 3, nil, nil}, Version{1, 2, 4, nil, nil}, 0},
+	{Version{0, 0, 0, nil, nil}, Version{0, 0, 1, nil, nil}, 0},
+}
+
 func TestStringer(t *testing.T) {
 	for _, test := range formatTests {
 		if res := test.v.String(); res != test.result {
@@ -296,6 +311,30 @@ func TestBuildMetaDataVersions(t *testing.T) {
 	_, err = NewBuildVersion("")
 	if err == nil {
 		t.Error("Expected error, got none")
+	}
+}
+
+func TestNextMajorVersion(t *testing.T) {
+	for _, test := range nextMajorVersionTests {
+		if test.v1.NextMajorVersion().Compare(test.v2) != test.result {
+			t.Errorf("Major version expected %q but found %q", test.v2, test.v1.NextMajorVersion())
+		}
+	}
+}
+
+func TestNextMinorVersion(t *testing.T) {
+	for _, test := range nextMinorVersionTests {
+		if test.v1.NextMinorVersion().Compare(test.v2) != test.result {
+			t.Errorf("Minor version expected %q but found %q", test.v2, test.v1.NextMinorVersion())
+		}
+	}
+}
+
+func TestNextPatchVersion(t *testing.T) {
+	for _, test := range nextPatchVersionTests {
+		if test.v1.NextPatchVersion().Compare(test.v2) != test.result {
+			t.Errorf("Patch version expected %q but found %q", test.v2, test.v1.NextPatchVersion())
+		}
 	}
 }
 

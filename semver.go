@@ -188,6 +188,36 @@ func (v Version) Validate() error {
 	return nil
 }
 
+// NextMajorVersion returns next major version
+func (v *Version) NextMajorVersion() Version {
+	nv, _ := Make(v.String())
+	nv.Major++
+	nv.Minor = 0
+	nv.Patch = 0
+	nv.Pre = nil
+	nv.Build = nil
+	return nv
+}
+
+// NextMinorVersion returns next minor version
+func (v *Version) NextMinorVersion() Version {
+	nv, _ := Make(v.String())
+	nv.Minor++
+	nv.Patch = 0
+	nv.Pre = nil
+	nv.Build = nil
+	return nv
+}
+
+// NextPatchVersion returns next patch version
+func (v *Version) NextPatchVersion() Version {
+	nv, _ := Make(v.String())
+	nv.Patch++
+	nv.Pre = nil
+	nv.Build = nil
+	return nv
+}
+
 // New is an alias for Parse and returns a pointer, parses version string and returns a validated Version or error
 func New(s string) (vp *Version, err error) {
 	v, err := Parse(s)
